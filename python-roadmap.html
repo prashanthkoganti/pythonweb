@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Python & Pandas — Complete Reference Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #04AA6D;
+    --dark:  #282A35;
+    --gray:  #f1f1f1;
+    --font:  'Source Sans 3', Verdana, Geneva, sans-serif;
+    --mono:  'Courier New', Courier, monospace;
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.65;
+    color: #333;
+    background: #fff;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: #fff;
+    border-right: 1px solid #ccc;
+    position: fixed;
+    top: 0; left: 0;
+    overflow-y: auto;
+    z-index: 100;
+    padding-bottom: 40px;
+  }
+
+  .sb-header {
+    background: var(--dark);
+    color: #fff;
+    padding: 14px 16px;
+    font-size: 17px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  .sb-section {
+    padding: 7px 16px 5px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    margin-top: 4px;
+  }
+
+  #sidebar a {
+    display: block;
+    padding: 7px 16px;
+    font-size: 14px;
+    color: #444;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: background 0.12s;
+    cursor: pointer;
+  }
+
+  #sidebar a:hover { background: #f1f1f1; color: #000; }
+  #sidebar a.active {
+    background: var(--green);
+    color: #fff;
+    border-left-color: #028a57;
+    font-weight: 600;
+  }
+
+  .sb-num { opacity: .55; font-size: 12px; margin-right: 5px; }
+
+  /* ── MAIN ── */
+  #main { margin-left: 220px; }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    background: var(--dark);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid #1a1c25;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  #topbar::-webkit-scrollbar { display: none; }
+
+  .tb-tab {
+    padding: 0 15px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    color: #ccc;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .tb-tab:hover { color: #fff; background: rgba(255,255,255,.07); }
+  .tb-tab.active { color: #fff; border-bottom-color: var(--green); font-weight: 600; }
+
+  /* ── BREADCRUMB ── */
+  #breadcrumb {
+    background: #f9f9f9;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 8px 32px;
+    font-size: 13px;
+    color: #888;
+  }
+  #breadcrumb span { color: var(--green); font-weight: 600; }
+
+  /* ── CONTENT ── */
+  #content {
+    max-width: 900px;
+    padding: 28px 32px 20px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--green);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .sec-title {
+    font-size: 27px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .sec-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 8px;
+    background: var(--green);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .sec-icon {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: #edfbf3;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    float: right;
+    margin-left: 16px;
+  }
+
+  hr.green {
+    border: none;
+    border-top: 2px solid var(--green);
+    margin: 8px 0 18px;
+  }
+
+  /* cards */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .card {
+    border: 1px solid #ddd;
+    border-top: 3px solid var(--green);
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #222; }
+  .card ul { padding-left: 18px; font-size: 14px; color: #444; }
+  .card li { margin-bottom: 3px; }
+
+  /* two-col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; }
+  .col-box {
+    border: 1px solid #ddd;
+    border-top: 3px solid var(--green);
+    border-radius: 4px;
+    padding: 12px 14px;
+  }
+  .col-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .col-box ul { padding-left: 16px; font-size: 13px; color: #555; }
+
+  /* code block */
+  .code-wrap { margin: 14px 0; }
+  .code-label {
+    display: inline-block;
+    background: var(--dark);
+    color: #a0cfb4;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 4px 4px 0 0;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  pre.code {
+    background: #282c34;
+    color: #abb2bf;
+    border-left: 4px solid var(--green);
+    padding: 15px 18px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+    overflow-x: auto;
+    border-radius: 0 4px 4px 4px;
+    white-space: pre;
+    margin: 0;
+  }
+
+  /* notes */
+  .note {
+    border-left: 4px solid var(--green);
+    background: #edfbf3;
+    padding: 11px 15px;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+    font-size: 14px;
+  }
+  .warn {
+    border-left: 4px solid #e7a000;
+    background: #fff8e6;
+    padding: 11px 15px;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+    font-size: 14px;
+  }
+
+  /* table */
+  .tbl-wrap { overflow-x: auto; margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: var(--dark); color: #fff; padding: 8px 14px; text-align: left; font-weight: 600; }
+  td { padding: 7px 14px; border-bottom: 1px solid #e5e5e5; }
+  tr:nth-child(even) td { background: #f9f9f9; }
+  td code, th code {
+    background: #f1f1f1; padding: 1px 5px; border-radius: 3px;
+    font-family: var(--mono); font-size: 12.5px; color: #c0392b;
+  }
+
+  /* headings inside content */
+  #content h3 {
+    font-size: 18px; font-weight: 700; color: #222;
+    margin: 24px 0 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+  }
+  #content h4 { font-size: 15px; font-weight: 700; color: #333; margin: 16px 0 7px; }
+  #content p { margin: 10px 0; color: #444; line-height: 1.7; }
+  #content ul, #content ol { padding-left: 20px; margin: 8px 0; }
+  #content li { margin-bottom: 4px; color: #444; }
+  #content strong { color: #222; }
+  code.inline {
+    background: #f1f1f1; border: 1px solid #e0e0e0;
+    padding: 1px 5px; border-radius: 3px;
+    font-family: var(--mono); font-size: 13px; color: #c0392b;
+  }
+
+  /* nav buttons */
+  .nav-btns {
+    display: flex; justify-content: space-between;
+    margin-top: 36px; padding-top: 20px;
+    border-top: 1px solid #eee;
+    padding-bottom: 48px;
+  }
+  .nav-btn {
+    background: var(--green); color: #fff; border: none;
+    padding: 9px 20px; font-size: 14px; font-weight: 600;
+    border-radius: 4px; cursor: pointer;
+    font-family: var(--font);
+    transition: background .15s;
+  }
+  .nav-btn:hover { background: #028a57; }
+  .nav-btn:disabled { opacity: .4; cursor: default; }
+
+  /* hamburger */
+  #hamburger {
+    display: none;
+    position: fixed; top: 0; right: 0; z-index: 200;
+    background: var(--dark); color: #fff; border: none;
+    padding: 12px 16px; font-size: 18px; cursor: pointer;
+  }
+
+  /* overlay */
+  #overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 99;
+  }
+
+  @media (max-width: 768px) {
+    #hamburger { display: block; }
+    #sidebar { transform: translateX(-100%); transition: transform .25s; }
+    #sidebar.open { transform: translateX(0); box-shadow: 4px 0 12px rgba(0,0,0,.2); }
+    #overlay.show { display: block; }
+    #main { margin-left: 0; }
+    #content { padding: 20px 16px; }
+    .cards, .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button id="hamburger" onclick="toggleSidebar()">&#9776;</button>
+<div id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sb-header">🐍 Python &amp; Pandas</div>
+
+  <div class="sb-section">Python Core</div>
+  <a onclick="show('what-is-python')"><span class="sb-num">01</span>What is Python?</a>
+  <a onclick="show('data-types')"><span class="sb-num">02</span>Data Types &amp; Strings</a>
+  <a onclick="show('operators')"><span class="sb-num">03</span>Operators</a>
+  <a onclick="show('type-conversions')"><span class="sb-num">04</span>Type Conversions</a>
+  <a onclick="show('control-statements')"><span class="sb-num">05</span>Control Statements</a>
+  <a onclick="show('conditional')"><span class="sb-num">06</span>Conditional Statements</a>
+  <a onclick="show('lists')"><span class="sb-num">07</span>Lists &amp; Comprehension</a>
+  <a onclick="show('dictionaries')"><span class="sb-num">08</span>Dictionaries</a>
+  <a onclick="show('file-operations')"><span class="sb-num">09</span>File Operations</a>
+  <a onclick="show('errors')"><span class="sb-num">10</span>Errors &amp; Exceptions</a>
+
+  <div class="sb-section">Pandas</div>
+  <a onclick="show('data-loading')"><span class="sb-num">P1</span>Data Loading</a>
+  <a onclick="show('data-inspection')"><span class="sb-num">P2</span>Data Inspection</a>
+  <a onclick="show('data-cleaning')"><span class="sb-num">P3</span>Data Cleaning</a>
+  <a onclick="show('selection')"><span class="sb-num">P4</span>Selection &amp; Filtering</a>
+  <a onclick="show('sorting')"><span class="sb-num">P5</span>Sorting</a>
+  <a onclick="show('column-ops')"><span class="sb-num">P6</span>Column Operations</a>
+  <a onclick="show('aggregation')"><span class="sb-num">P7</span>Aggregation</a>
+  <a onclick="show('groupby')"><span class="sb-num">P8</span>GroupBy</a>
+  <a onclick="show('merging')"><span class="sb-num">P9</span>Merging &amp; Joining</a>
+  <a onclick="show('reshaping')"><span class="sb-num">P10</span>Reshaping</a>
+  <a onclick="show('timeseries')"><span class="sb-num">P11</span>Time Series</a>
+  <a onclick="show('apply')"><span class="sb-num">P12</span>Apply Functions</a>
+  <a onclick="show('string-ops')"><span class="sb-num">P13</span>String Operations</a>
+  <a onclick="show('index-ops')"><span class="sb-num">P14</span>Index Operations</a>
+  <a onclick="show('sampling')"><span class="sb-num">P15</span>Sampling</a>
+  <a onclick="show('summary')"><span class="sb-num">★</span>What to Master</a>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="tb-tab active">Python Fundamentals</div>
+    <div class="tb-tab">Data Types &amp; Strings</div>
+    <div class="tb-tab">Control Flow</div>
+    <div class="tb-tab">File I/O</div>
+    <div class="tb-tab">Pandas Complete</div>
+    <div class="tb-tab">Interview Ready</div>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <div id="breadcrumb">Python &amp; Pandas › <span id="bc-label">What is Python?</span></div>
+
+  <!-- DYNAMIC CONTENT -->
+  <div id="content"></div>
+
+  <!-- NAV BUTTONS -->
+  <div style="padding: 0 32px;">
+    <div class="nav-btns">
+      <button class="nav-btn" id="btn-prev" onclick="goPrev()">&#10094; Previous</button>
+      <button class="nav-btn" id="btn-next" onclick="goNext()">Next &#10095;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── All sections data ──────────────────────────────────────────────────────
+const SECTIONS = [
+  'what-is-python','data-types','operators','type-conversions',
+  'control-statements','conditional','lists','dictionaries',
+  'file-operations','errors',
+  'data-loading','data-inspection','data-cleaning','selection',
+  'sorting','column-ops','aggregation','groupby',
+  'merging','reshaping','timeseries','apply',
+  'string-ops','index-ops','sampling','summary'
+];
+
+const LABELS = {
+  'what-is-python':    'What is Python?',
+  'data-types':        'Data Types & Strings',
+  'operators':         'Operators',
+  'type-conversions':  'Type Conversions',
+  'control-statements':'Control Statements',
+  'conditional':       'Conditional Statements',
+  'lists':             'Lists & Comprehension',
+  'dictionaries':      'Dictionaries',
+  'file-operations':   'File Operations',
+  'errors':            'Errors & Exceptions',
+  'data-loading':      'Data Loading',
+  'data-inspection':   'Data Inspection & Info',
+  'data-cleaning':     'Data Cleaning',
+  'selection':         'Selection & Filtering',
+  'sorting':           'Sorting',
+  'column-ops':        'Column Operations',
+  'aggregation':       'Aggregation & Statistics',
+  'groupby':           'GroupBy',
+  'merging':           'Merging & Joining',
+  'reshaping':         'Reshaping',
+  'timeseries':        'Time Series',
+  'apply':             'Apply Functions',
+  'string-ops':        'String Operations',
+  'index-ops':         'Index Operations',
+  'sampling':          'Sampling',
+  'summary':           'What to Master',
+};
+
+// ── HTML for each section ──────────────────────────────────────────────────
+const HTML = {};
+
+HTML['what-is-python'] = `
+<span class="badge">Complete Reference Guide</span>
+<div class="sec-title"><span class="sec-num">01</span> What is Python? <span class="sec-icon">🐍</span></div>
+<hr class="green">
+<p>Python is a <strong>high-level, interpreted, general-purpose programming language</strong> created by Guido van Rossum in 1991. The name comes not from the snake, but from the British comedy group <em>Monty Python</em> — which tells you something about the language's personality: it's designed to be fun and readable.</p>
+<div class="cards">
+  <div class="card"><h4>🌟 Why Python?</h4><ul>
+    <li>Reads almost like English</li><li>Huge ecosystem of libraries</li>
+    <li>Runs everywhere (Windows, Mac, Linux)</li><li>#1 language for Data Science &amp; AI</li>
+    <li>Massive community &amp; job market</li></ul></div>
+  <div class="card"><h4>🏗️ Where is Python Used?</h4><ul>
+    <li>Data Analysis &amp; Visualization</li><li>Machine Learning &amp; AI</li>
+    <li>Web Development (Django, Flask)</li><li>Automation &amp; Scripting</li>
+    <li>Scientific Computing</li></ul></div>
+</div>
+<div class="code-wrap"><div class="code-label">Your First Python Program</div>
+<pre class="code"># This is a comment — Python ignores anything after #
+print("Hello, World!")          # Output: Hello, World!
+
+# Python is dynamically typed — no need to declare variable types
+name = "Arjun"
+age  = 22
+gpa  = 8.7
+
+print(f"Name: {name}, Age: {age}, GPA: {gpa}")
+# Output: Name: Arjun, Age: 22, GPA: 8.7</pre></div>
+<div class="note">💡 <strong>Interpreted vs Compiled</strong> — Python is <em>interpreted</em> — it runs line by line. You don't need to compile it first. This makes development fast, but it runs slower than languages like C++.</div>`;
+
+HTML['data-types'] = `
+<div class="sec-title"><span class="sec-num">02</span> Data Types &amp; Strings <span class="sec-icon">🔢</span></div>
+<hr class="green">
+<p>Every value in Python has a <strong>type</strong>. Python automatically figures out what type something is.</p>
+<div class="tbl-wrap"><table>
+  <tr><th>Type</th><th>Example</th><th>What it holds</th></tr>
+  <tr><td><code>int</code></td><td><code>42, -7</code></td><td>Whole numbers</td></tr>
+  <tr><td><code>float</code></td><td><code>3.14, -0.5</code></td><td>Decimal numbers</td></tr>
+  <tr><td><code>str</code></td><td><code>"hello"</code></td><td>Text / characters</td></tr>
+  <tr><td><code>bool</code></td><td><code>True, False</code></td><td>True or False only</td></tr>
+  <tr><td><code>NoneType</code></td><td><code>None</code></td><td>The absence of a value</td></tr>
+  <tr><td><code>list</code></td><td><code>[1, 2, 3]</code></td><td>Ordered collection</td></tr>
+  <tr><td><code>dict</code></td><td><code>{"a": 1}</code></td><td>Key-value pairs</td></tr>
+  <tr><td><code>tuple</code></td><td><code>(1, 2)</code></td><td>Immutable ordered collection</td></tr>
+  <tr><td><code>set</code></td><td><code>{1, 2, 3}</code></td><td>Unique unordered items</td></tr>
+</table></div>
+<div class="code-wrap"><div class="code-label">Data Types in Action</div>
+<pre class="code">x = 10           # int
+y = 3.14         # float
+name = "Python"  # str
+flag = True      # bool
+nothing = None   # NoneType
+
+print(type(x))        # &lt;class 'int'&gt;
+print(type(name))     # &lt;class 'str'&gt;
+print(type(flag))     # &lt;class 'bool'&gt;</pre></div>
+<h3>Strings — Working with Text</h3>
+<p>Strings are sequences of characters. Strings are <strong>immutable</strong> — once created, you can't change individual characters.</p>
+<div class="code-wrap"><div class="code-label">String Creation &amp; Basics</div>
+<pre class="code">s1 = 'Hello'
+s2 = "World"
+s3 = """This is a
+multi-line string"""
+
+result = s1 + " " + s2     # "Hello World"
+repeat = "ha" * 3          # "hahaha"
+print(len(s1))             # 5
+print(s1[0])               # 'H'
+print(s1[-1])              # 'o' (last character)
+print(s1[1:4])             # 'ell'
+print(s1[::-1])            # 'olleH' (reversed!)</pre></div>
+<div class="code-wrap"><div class="code-label">Essential String Methods</div>
+<pre class="code">text = "  Hello, Python World!  "
+
+text.upper()              # "  HELLO, PYTHON WORLD!  "
+text.lower()              # "  hello, python world!  "
+text.strip()              # "Hello, Python World!"
+text.find("Python")       # 9 (index where it starts)
+text.count("l")           # 3
+"Python" in text          # True
+text.replace("Python", "Data")
+text.split(",")           # ['  Hello', ' Python World!  ']
+"-".join(["a", "b", "c"])  # "a-b-c"</pre></div>
+<div class="code-wrap"><div class="code-label">F-Strings — Format Like a Pro</div>
+<pre class="code">name = "Arjun"
+score = 94.567
+
+print(f"Hello, {name}!")               # Hello, Arjun!
+print(f"2 + 2 = {2 + 2}")             # 2 + 2 = 4
+print(f"Score: {score:.2f}")           # Score: 94.57
+print(f"Score: {score:08.2f}")         # Score: 00094.57
+print(f"{'Left':10}")                  # "Left      "
+print(f"{'Right':>10}")                # "     Right"</pre></div>`;
+
+HTML['operators'] = `
+<div class="sec-title"><span class="sec-num">03</span> Operators <span class="sec-icon">➕</span></div>
+<hr class="green">
+<p>Operators are symbols that perform operations on values. Python has a rich set of operators.</p>
+<h3>Arithmetic Operators</h3>
+<div class="code-wrap"><div class="code-label">Math Operations</div>
+<pre class="code">a, b = 15, 4
+
+print(a + b)    # 19  — Addition
+print(a - b)    # 11  — Subtraction
+print(a * b)    # 60  — Multiplication
+print(a / b)    # 3.75 — Division (always float)
+print(a // b)   # 3   — Floor division (drop decimals)
+print(a % b)    # 3   — Modulus (remainder)
+print(a ** b)   # 50625 — Exponentiation (15^4)
+
+# Trick: check if even/odd with %
+print(10 % 2 == 0)   # True — it's even</pre></div>
+<h3>Comparison Operators</h3>
+<div class="code-wrap"><div class="code-label">Comparisons — Always Return True or False</div>
+<pre class="code">x, y = 10, 20
+
+print(x == y)   # False — Equal to
+print(x != y)   # True  — Not equal
+print(x &lt; y)    # True  — Less than
+print(x &gt; y)    # False — Greater than
+print(x &lt;= 10)  # True  — Less than or equal
+
+# Chained comparisons (very Pythonic!)
+age = 25
+print(18 &lt;= age &lt;= 60)  # True — check range in one go</pre></div>
+<h3>Logical Operators</h3>
+<div class="code-wrap"><div class="code-label">and, or, not</div>
+<pre class="code">a, b = True, False
+
+print(a and b)   # False — both must be True
+print(a or  b)   # True  — at least one True
+print(not a)     # False — flip it
+
+age      = 20
+has_id   = True
+can_vote = age >= 18 and has_id
+print(can_vote)   # True</pre></div>
+<h3>Assignment Operators</h3>
+<div class="code-wrap"><div class="code-label">Shorthand Assignment</div>
+<pre class="code">x = 10
+x += 5    # x = x + 5  →  15
+x -= 3    # x = x - 3  →  12
+x *= 2    # x = x * 2  →  24
+x /= 4    # x = x / 4  →  6.0
+x //= 2   # x = x // 2 →  3.0
+x **= 2   # x = x ** 2 →  9.0</pre></div>
+<h3>Identity &amp; Membership Operators</h3>
+<div class="code-wrap"><div class="code-label">is, in — Very Useful in Real Code</div>
+<pre class="code">a = [1, 2, 3]
+b = a          # b points to same list
+c = [1, 2, 3]  # different list, same values
+
+print(a is b)   # True  — same object
+print(a is c)   # False — different objects
+print(a == c)   # True  — same VALUES
+
+fruits = ["apple", "banana", "mango"]
+print("mango" in fruits)      # True
+print("grape" not in fruits)  # True
+
+val = None
+print(val is None)   # True — use 'is', not '=='</pre></div>`;
+
+HTML['type-conversions'] = `
+<div class="sec-title"><span class="sec-num">04</span> Type Conversions <span class="sec-icon">🔄</span></div>
+<hr class="green">
+<p>Python lets you <strong>explicitly convert</strong> between types using built-in functions.</p>
+<div class="code-wrap"><div class="code-label">Explicit Type Conversion (Casting)</div>
+<pre class="code">age_str = "25"
+age_int = int(age_str)        # 25 (integer)
+age_flt = float(age_str)      # 25.0 (float)
+
+score = 99
+score_str = str(score)        # "99"
+
+pi = 3.99
+print(int(pi))               # 3 (not 4! — truncates)
+
+print(bool(0))               # False
+print(bool(1))               # True
+print(bool(""))              # False (empty string)
+print(bool("hello"))         # True
+print(bool([]))              # False (empty list)
+
+nums   = [1, 2, 2, 3, 3]
+unique = set(nums)           # {1, 2, 3} — removes duplicates!
+back   = list(unique)        # back to list
+frozen = tuple(nums)         # (1, 2, 2, 3, 3)</pre></div>
+<div class="warn">⚠️ <strong>Common Bug Alert</strong> — You cannot convert a non-numeric string to int or float. <code class="inline">int("hello")</code> raises a <code class="inline">ValueError</code>. Always validate input before converting.</div>
+<div class="code-wrap"><div class="code-label">Safe Conversion with try-except</div>
+<pre class="code">def safe_int(val):
+    try:
+        return int(val)
+    except (ValueError, TypeError):
+        return None   # return None if conversion fails
+
+print(safe_int("42"))      # 42
+print(safe_int("hello"))   # None — no crash!</pre></div>`;
+
+HTML['control-statements'] = `
+<div class="sec-title"><span class="sec-num">05</span> Control Statements <span class="sec-icon">🔁</span></div>
+<hr class="green">
+<p>Control statements decide <strong>how many times</strong> code runs. Python has two loops: <code class="inline">for</code> and <code class="inline">while</code>.</p>
+<h3>For Loops</h3>
+<div class="code-wrap"><div class="code-label">For Loop — Iterate over Sequences</div>
+<pre class="code">fruits = ["apple", "banana", "cherry"]
+for fruit in fruits:
+    print(fruit)
+
+# range() — generate numbers
+for i in range(5):           # 0, 1, 2, 3, 4
+    print(i)
+
+for i in range(2, 10, 2):    # 2, 4, 6, 8
+    print(i)
+
+# enumerate — get index AND value
+for i, fruit in enumerate(fruits):
+    print(f"{i}: {fruit}")
+
+# zip — loop over two lists together
+names  = ["Alice", "Bob"]
+scores = [90, 85]
+for name, score in zip(names, scores):
+    print(f"{name}: {score}")</pre></div>
+<h3>While Loops</h3>
+<div class="code-wrap"><div class="code-label">While Loop — Runs Until Condition is False</div>
+<pre class="code">count = 1
+while count &lt;= 5:
+    print(f"Count: {count}")
+    count += 1</pre></div>
+<h3>break, continue, pass</h3>
+<div class="code-wrap"><div class="code-label">Loop Control Keywords</div>
+<pre class="code"># break — exit the loop entirely
+for i in range(10):
+    if i == 5:
+        break
+    print(i)     # prints 0 1 2 3 4
+
+# continue — skip this iteration
+for i in range(10):
+    if i % 2 == 0:
+        continue     # skip even numbers
+    print(i)     # prints 1 3 5 7 9
+
+# pass — do nothing (placeholder)
+for i in range(5):
+    pass
+
+# for-else (runs if no break happened)
+for i in [1, 3, 5]:
+    if i == 4:
+        break
+else:
+    print("4 not found")   # this runs!</pre></div>`;
+
+HTML['conditional'] = `
+<div class="sec-title"><span class="sec-num">06</span> Conditional Statements <span class="sec-icon">🔀</span></div>
+<hr class="green">
+<p>Conditionals let your program make decisions. "If this is true, do that; otherwise, do something else."</p>
+<div class="code-wrap"><div class="code-label">if / elif / else</div>
+<pre class="code">score = 75
+
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+elif score >= 60:
+    grade = "D"
+else:
+    grade = "F"
+
+print(f"Grade: {grade}")   # Grade: C</pre></div>
+<h3>Ternary / Inline If</h3>
+<div class="code-wrap"><div class="code-label">Ternary Expression</div>
+<pre class="code"># Syntax: value_if_true if condition else value_if_false
+age = 20
+status = "Adult" if age >= 18 else "Minor"
+print(status)   # Adult
+
+nums = [1, -2, 3, -4]
+abs_nums = [x if x &gt; 0 else -x for x in nums]
+# [1, 2, 3, 4]</pre></div>
+<h3>Match Statement (Python 3.10+)</h3>
+<div class="code-wrap"><div class="code-label">match-case — Like switch in Other Languages</div>
+<pre class="code">command = "quit"
+
+match command:
+    case "start":
+        print("Starting...")
+    case "stop":
+        print("Stopping...")
+    case "quit":
+        print("Goodbye!")    # ← this runs
+    case _:
+        print("Unknown command")   # default</pre></div>`;
+
+HTML['lists'] = `
+<div class="sec-title"><span class="sec-num">07</span> Lists &amp; List Comprehension <span class="sec-icon">📋</span></div>
+<hr class="green">
+<p>A list is Python's most versatile data structure. It's an <strong>ordered, mutable collection</strong>.</p>
+<div class="code-wrap"><div class="code-label">List Basics</div>
+<pre class="code">nums   = [1, 2, 3, 4, 5]
+mixed  = [1, "hello", 3.14, True]
+nested = [[1, 2], [3, 4]]
+
+print(nums[0])          # 1   — first element
+print(nums[-1])         # 5   — last element
+print(nums[1:4])        # [2, 3, 4]
+print(nums[::-1])       # [5, 4, 3, 2, 1] — reversed
+
+nums.append(6)          # add to end
+nums.insert(1, 99)      # insert at index 1
+nums.extend([7, 8])     # add multiple items
+nums.remove(99)         # remove first occurrence
+nums.pop()              # remove &amp; return last item
+del nums[2]             # delete at index
+
+nums = [3, 1, 4, 1, 5]
+nums.sort()             # sort in-place: [1, 1, 3, 4, 5]
+nums.sort(reverse=True) # descending
+print(nums.count(1))    # 2
+print(nums.index(4))    # index of first 4</pre></div>
+<h3>List Comprehension — The Superpower</h3>
+<div class="code-wrap"><div class="code-label">List Comprehension — [expression for item in iterable if condition]</div>
+<pre class="code"># Regular loop way
+squares = []
+for i in range(1, 6):
+    squares.append(i ** 2)
+# [1, 4, 9, 16, 25]
+
+# Comprehension way (same result, one line!)
+squares = [i ** 2 for i in range(1, 6)]
+
+# With condition — filter even numbers only
+evens = [i for i in range(20) if i % 2 == 0]
+
+# Transform strings
+words = ["hello", "world", "python"]
+upper = [w.upper() for w in words]
+
+# Flatten a 2D list
+matrix = [[1, 2], [3, 4], [5, 6]]
+flat = [x for row in matrix for x in row]
+# [1, 2, 3, 4, 5, 6]
+
+# Ternary in comprehension
+labels = ["even" if x % 2 == 0 else "odd" for x in range(6)]</pre></div>`;
+
+HTML['dictionaries'] = `
+<div class="sec-title"><span class="sec-num">08</span> Dictionaries <span class="sec-icon">📚</span></div>
+<hr class="green">
+<p>A dictionary stores data as <strong>key-value pairs</strong>. Keys must be unique and immutable.</p>
+<div class="code-wrap"><div class="code-label">Dictionary Fundamentals</div>
+<pre class="code">student = {
+    "name":   "Priya",
+    "age":    21,
+    "grade":  "A",
+    "active": True
+}
+
+print(student["name"])            # "Priya"
+print(student.get("age"))         # 21
+print(student.get("gpa", 0.0))   # 0.0 (default if key missing)
+
+student["age"] = 22              # update key
+student["gpa"]  = 9.2            # add new key
+student.pop("active")            # remove &amp; return value
+del student["grade"]
+
+for key, val in student.items():
+    print(f"{key}: {val}")
+
+print("name" in student)         # True
+
+# Merge (Python 3.9+)
+extra  = {"dept": "CS"}
+merged = student | extra
+
+# Dict Comprehension
+squares = {x: x**2 for x in range(1, 6)}
+# {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}</pre></div>
+<div class="note">💡 <strong>Always use .get() for safe access.</strong> <code class="inline">student["missing_key"]</code> raises a <code class="inline">KeyError</code>. <code class="inline">student.get("missing_key", default)</code> safely returns the default instead.</div>`;
+
+HTML['file-operations'] = `
+<div class="sec-title"><span class="sec-num">09</span> File Operations <span class="sec-icon">📁</span></div>
+<hr class="green">
+<p>Python makes file I/O simple with the built-in <code class="inline">open()</code> function. Always use the <code class="inline">with</code> statement.</p>
+<div class="tbl-wrap"><table>
+  <tr><th>Mode</th><th>Meaning</th><th>File must exist?</th></tr>
+  <tr><td><code>"r"</code></td><td>Read only (default)</td><td>Yes — error if not</td></tr>
+  <tr><td><code>"w"</code></td><td>Write (overwrites)</td><td>No — creates if missing</td></tr>
+  <tr><td><code>"a"</code></td><td>Append (adds to end)</td><td>No — creates if missing</td></tr>
+  <tr><td><code>"x"</code></td><td>Create (fails if exists)</td><td>No — must not exist</td></tr>
+  <tr><td><code>"r+"</code></td><td>Read &amp; write</td><td>Yes</td></tr>
+  <tr><td><code>"b"</code></td><td>Binary mode (add to any)</td><td>—</td></tr>
+</table></div>
+<div class="code-wrap"><div class="code-label">Reading Files</div>
+<pre class="code">with open("data.txt", "r") as f:
+    content = f.read()
+
+with open("data.txt", "r") as f:
+    for line in f:
+        print(line.strip())
+
+with open("data.txt", "r") as f:
+    lines = f.readlines()</pre></div>
+<div class="code-wrap"><div class="code-label">Writing Files</div>
+<pre class="code">with open("output.txt", "w") as f:
+    f.write("Hello, File!\n")
+
+with open("log.txt", "a") as f:
+    f.write("New log entry\n")</pre></div>
+<div class="code-wrap"><div class="code-label">Working with CSV and JSON Files</div>
+<pre class="code">import csv, json
+
+# CSV
+data = [["name", "age"], ["Alice", 25], ["Bob", 30]]
+with open("people.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerows(data)
+
+with open("people.csv") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(row["name"], row["age"])
+
+# JSON
+person = {"name": "Ravi", "age": 28}
+with open("person.json", "w") as f:
+    json.dump(person, f, indent=4)
+
+with open("person.json") as f:
+    data = json.load(f)
+    print(data["name"])   # "Ravi"</pre></div>`;
+
+HTML['errors'] = `
+<div class="sec-title"><span class="sec-num">10</span> Errors &amp; Exceptions <span class="sec-icon">🚨</span></div>
+<hr class="green">
+<p>Good programmers don't avoid errors — they <strong>handle them gracefully</strong>.</p>
+<div class="tbl-wrap"><table>
+  <tr><th>Exception</th><th>When it happens</th></tr>
+  <tr><td><code>SyntaxError</code></td><td>Code is written incorrectly</td></tr>
+  <tr><td><code>NameError</code></td><td>Variable used before being defined</td></tr>
+  <tr><td><code>TypeError</code></td><td>Wrong data type in operation</td></tr>
+  <tr><td><code>ValueError</code></td><td>Right type, wrong value (e.g. int("abc"))</td></tr>
+  <tr><td><code>IndexError</code></td><td>List index out of range</td></tr>
+  <tr><td><code>KeyError</code></td><td>Dictionary key doesn't exist</td></tr>
+  <tr><td><code>ZeroDivisionError</code></td><td>Dividing by zero</td></tr>
+  <tr><td><code>FileNotFoundError</code></td><td>File doesn't exist</td></tr>
+  <tr><td><code>AttributeError</code></td><td>Object doesn't have that attribute</td></tr>
+</table></div>
+<div class="code-wrap"><div class="code-label">try / except / else / finally</div>
+<pre class="code">try:
+    num = int(input("Enter a number: "))
+    result = 100 / num
+except ValueError:
+    print("That's not a number!")
+except ZeroDivisionError:
+    print("Can't divide by zero!")
+except Exception as e:
+    print(f"Something went wrong: {e}")
+else:
+    print(f"Result: {result}")    # runs only if NO exception
+finally:
+    print("This ALWAYS runs")     # cleanup code here</pre></div>
+<div class="code-wrap"><div class="code-label">Raising &amp; Custom Exceptions</div>
+<pre class="code">def set_age(age):
+    if age &lt; 0:
+        raise ValueError(f"Age cannot be negative: {age}")
+    return age
+
+class InsufficientFundsError(Exception):
+    def __init__(self, amount, balance):
+        self.message = f"Need {amount}, only have {balance}"
+        super().__init__(self.message)
+
+def withdraw(amount, balance):
+    if amount &gt; balance:
+        raise InsufficientFundsError(amount, balance)
+    return balance - amount
+
+try:
+    withdraw(500, 200)
+except InsufficientFundsError as e:
+    print(e)   # Need 500, only have 200</pre></div>`;
+
+HTML['data-loading'] = `
+<span class="badge">Pandas — Complete Guide</span>
+<div class="sec-title"><span class="sec-num">P1</span> Data Loading (I/O) <span class="sec-icon">📥</span></div>
+<hr class="green">
+<p>The first thing you do in any data project is <strong>load your data</strong>. Pandas speaks almost every file format.</p>
+<div class="code-wrap"><div class="code-label">Reading Data — The Most Common Functions</div>
+<pre class="code">import pandas as pd
+
+# CSV — most common format
+df = pd.read_csv("data.csv")
+df = pd.read_csv("data.csv", sep=";")           # semicolon-separated
+df = pd.read_csv("data.csv", header=None)        # no header row
+df = pd.read_csv("data.csv", usecols=["A","B"])  # only specific columns
+df = pd.read_csv("data.csv", nrows=1000)          # read only 1000 rows
+df = pd.read_csv("data.csv", skiprows=2)          # skip first 2 rows
+df = pd.read_csv("data.csv", index_col="id")      # set id as index
+df = pd.read_csv("data.csv", na_values=["N/A", "-"])
+
+# Excel
+df = pd.read_excel("report.xlsx")
+df = pd.read_excel("report.xlsx", sheet_name="Sheet2")
+
+# JSON
+df = pd.read_json("data.json")
+
+# SQL
+import sqlite3
+conn = sqlite3.connect("database.db")
+df = pd.read_sql("SELECT * FROM users", conn)
+
+# Parquet — efficient columnar format
+df = pd.read_parquet("data.parquet")
+
+# HTML table from a web page!
+tables = pd.read_html("https://example.com/table")
+df = tables[0]</pre></div>
+<div class="code-wrap"><div class="code-label">Exporting / Saving Data</div>
+<pre class="code">df.to_csv("output.csv", index=False)
+df.to_excel("output.xlsx", sheet_name="Results", index=False)
+df.to_json("output.json", orient="records", indent=2)
+df.to_sql("table_name", conn, if_exists="replace", index=False)
+df.to_parquet("output.parquet", compression="snappy")</pre></div>`;
+
+HTML['data-inspection'] = `
+<div class="sec-title"><span class="sec-num">P2</span> Data Inspection &amp; Info <span class="sec-icon">🔍</span></div>
+<hr class="green">
+<p>Before doing anything to your data, <strong>understand it first</strong>. Run these functions every time you load new data.</p>
+<div class="code-wrap"><div class="code-label">Exploring a DataFrame</div>
+<pre class="code">df.head()            # first 5 rows (default)
+df.head(10)           # first 10 rows
+df.tail(3)            # last 3 rows
+
+df.info()             # column names, data types, non-null counts
+df.describe()         # stats: count, mean, std, min, max for numerics
+df.describe(include="all")  # include string/object columns too
+
+df.shape              # (rows, columns) — e.g. (1000, 15)
+df.columns            # Index(['col1', 'col2', ...])
+df.dtypes             # data type of each column
+
+df.nunique()          # number of unique values per column
+df["city"].value_counts()              # frequency of each value
+df["city"].value_counts(normalize=True)   # as percentages
+
+df.memory_usage(deep=True).sum()  # total memory used</pre></div>`;
+
+HTML['data-cleaning'] = `
+<div class="sec-title"><span class="sec-num">P3</span> Data Cleaning <span class="sec-icon">🧹</span></div>
+<hr class="green">
+<p>Real-world data is messy. Cleaning takes up 60–80% of a data analyst's time. Master this and you'll stand out.</p>
+<div class="code-wrap"><div class="code-label">Handling Missing Values (NaN)</div>
+<pre class="code">df.isnull().sum()
+df.isnull().sum() / len(df)  # percentage missing
+
+df.dropna()                          # drop rows with ANY missing value
+df.dropna(axis=1)                    # drop COLUMNS with any missing
+df.dropna(thresh=3)                  # keep rows with at least 3 non-null
+df.dropna(subset=["name", "age"])
+
+df.fillna(0)
+df.fillna({"age": 0, "name": "Unknown"})
+df["salary"].fillna(df["salary"].mean())
+df["col"].fillna(method="ffill")     # forward fill
+df["col"].fillna(method="bfill")     # backward fill
+
+df.duplicated().sum()
+df.drop_duplicates()
+df.drop_duplicates(subset=["email"], keep="first")
+
+df.rename(columns={"old_name": "new_name"})
+df.columns = [c.lower().strip() for c in df.columns]
+
+df["age"].astype(int)
+df["price"].astype(float)
+df["date"].astype("datetime64")
+
+df.replace("N/A", pd.NA)
+df["gender"].replace({"M": "Male", "F": "Female"})</pre></div>`;
+
+HTML['selection'] = `
+<div class="sec-title"><span class="sec-num">P4</span> Selection &amp; Filtering <span class="sec-icon">🎯</span></div>
+<hr class="green">
+<p>Selecting the right rows and columns is the most fundamental Pandas skill. <code class="inline">loc</code> and <code class="inline">iloc</code> are your bread and butter.</p>
+<div class="two-col">
+  <div class="col-box"><h4>df.loc[ ] — Label Based</h4><ul>
+    <li>Uses row/column names</li><li>Inclusive on both ends</li>
+    <li>Supports boolean masks</li><li>More readable in real code</li></ul></div>
+  <div class="col-box"><h4>df.iloc[ ] — Position Based</h4><ul>
+    <li>Uses integer positions (0, 1, 2...)</li>
+    <li>Exclusive on end (like Python slices)</li>
+    <li>Good for numeric indexing</li></ul></div>
+</div>
+<div class="code-wrap"><div class="code-label">loc, iloc, query, Boolean Filtering</div>
+<pre class="code"># Boolean filtering — most common
+df[df["age"] &gt; 25]
+df[df["city"] == "Hyderabad"]
+df[(df["age"] &gt; 25) &amp; (df["salary"] &gt; 50000)]  # AND
+df[(df["city"] == "Mumbai") | (df["city"] == "Delhi")]  # OR
+
+# loc — label based
+df.loc[0]
+df.loc[0:5]                      # rows 0 to 5 (inclusive!)
+df.loc[0:5, "name":"salary"]     # rows and columns by name
+df.loc[df["age"] &gt; 25, "name"]  # filtered column
+
+# iloc — position based
+df.iloc[0]                       # first row
+df.iloc[0:5]                     # first 5 rows
+df.iloc[:, 0]                    # first column
+df.iloc[0:5, 1:4]                # rows 0-4, cols 1-3
+
+# query — SQL-like filtering
+df.query("age &gt; 25")
+df.query("city == 'Hyderabad' and salary &gt; 50000")
+threshold = 50000
+df.query("salary &gt; @threshold")   # use variable with @</pre></div>`;
+
+HTML['sorting'] = `
+<div class="sec-title"><span class="sec-num">P5</span> Sorting <span class="sec-icon">🔄</span></div>
+<hr class="green">
+<div class="code-wrap"><div class="code-label">Sorting DataFrames</div>
+<pre class="code">df.sort_values("age")                           # ascending (default)
+df.sort_values("age", ascending=False)
+df.sort_values(["city", "salary"])
+df.sort_values(["city", "salary"],
+               ascending=[True, False])         # city asc, salary desc
+df.sort_values("name", na_position="last")
+
+df.sort_index()
+df.sort_index(ascending=False)
+
+df.nlargest(5, "salary")       # top 5 by salary
+df.nsmallest(5, "salary")      # bottom 5 by salary</pre></div>`;
+
+HTML['column-ops'] = `
+<div class="sec-title"><span class="sec-num">P6</span> Column Operations <span class="sec-icon">➕</span></div>
+<hr class="green">
+<div class="code-wrap"><div class="code-label">Adding, Modifying, Removing Columns</div>
+<pre class="code">df["tax"] = df["salary"] * 0.1
+df["full_name"] = df["first"] + " " + df["last"]
+
+df = df.assign(
+    tax      = df["salary"] * 0.1,
+    net_pay  = lambda x: x["salary"] - x["salary"] * 0.1,
+    category = "employee"
+)
+
+df.insert(2, "dept", "Engineering")
+
+df.drop("tax", axis=1)
+df.drop(["tax", "dept"], axis=1)
+col = df.pop("tax")
+
+df.drop(0)
+df.drop([0, 5, 10])</pre></div>`;
+
+HTML['aggregation'] = `
+<div class="sec-title"><span class="sec-num">P7</span> Aggregation &amp; Statistics <span class="sec-icon">🧮</span></div>
+<hr class="green">
+<div class="code-wrap"><div class="code-label">Statistical Operations</div>
+<pre class="code">df.sum()
+df.mean()
+df.median()
+df.mode()
+df.min()
+df.max()
+df.std()
+df.var()
+df.count()
+
+df["salary"].sum()
+df["salary"].mean()
+df["salary"].quantile(0.75)    # 75th percentile
+df["salary"].cumsum()           # cumulative sum
+df["salary"].pct_change()       # % change row over row
+
+df.corr()                       # correlation matrix (–1 to 1)
+df.cov()
+df["age"].corr(df["salary"])    # correlation between 2 cols</pre></div>`;
+
+HTML['groupby'] = `
+<div class="sec-title"><span class="sec-num">P8</span> GroupBy — The Most Important Skill <span class="sec-icon">🧠</span></div>
+<hr class="green">
+<p>GroupBy pattern: <strong>Split → Apply → Combine</strong>.</p>
+<div class="note">💡 <strong>This is interview gold.</strong> Almost every data analysis question involves groupby. "Average salary by department?" "Orders per city per month?" These are all groupby problems.</div>
+<div class="code-wrap"><div class="code-label">GroupBy — From Basic to Advanced</div>
+<pre class="code">df.groupby("department")["salary"].mean()
+
+df.groupby(["city", "department"])["salary"].mean()
+
+df.groupby("department")["salary"].agg(["mean", "min", "max", "count"])
+
+df.groupby("department").agg({
+    "salary": ["mean", "max"],
+    "age":    ["min", "mean"],
+    "name":   "count"
+})
+
+df.groupby("department").agg(
+    avg_salary = ("salary", "mean"),
+    max_salary = ("salary", "max"),
+    headcount  = ("name", "count")
+)
+
+# transform — same shape as original
+df["dept_avg"]  = df.groupby("department")["salary"].transform("mean")
+df["above_avg"] = df["salary"] &gt; df["dept_avg"]
+
+df.groupby("city").size()
+
+def salary_range(x):
+    return x.max() - x.min()
+
+df.groupby("department")["salary"].agg(salary_range)</pre></div>`;
+
+HTML['merging'] = `
+<div class="sec-title"><span class="sec-num">P9</span> Merging &amp; Joining <span class="sec-icon">🔗</span></div>
+<hr class="green">
+<p>Combining DataFrames — think of it like SQL JOINs.</p>
+<div class="code-wrap"><div class="code-label">merge, join, concat</div>
+<pre class="code">pd.merge(df1, df2, on="id")                    # inner join
+pd.merge(df1, df2, on="id", how="left")        # left join
+pd.merge(df1, df2, on="id", how="right")       # right join
+pd.merge(df1, df2, on="id", how="outer")       # full outer join
+
+pd.merge(df1, df2, left_on="emp_id", right_on="employee_id")
+pd.merge(df1, df2, on=["year", "dept"])
+
+df1.join(df2)
+df1.join(df2, how="inner")
+df1.join(df2, lsuffix="_left", rsuffix="_right")
+
+pd.concat([df1, df2])                   # stack rows (axis=0)
+pd.concat([df1, df2], ignore_index=True)
+pd.concat([df1, df2], axis=1)           # stack columns
+pd.concat([df1, df2], keys=["2023", "2024"])</pre></div>`;
+
+HTML['reshaping'] = `
+<div class="sec-title"><span class="sec-num">P10</span> Reshaping <span class="sec-icon">🔁</span></div>
+<hr class="green">
+<div class="code-wrap"><div class="code-label">pivot, melt, stack, unstack</div>
+<pre class="code"># pivot — long to wide
+wide = df.pivot(index="name", columns="month", values="sales")
+# month   Feb  Jan
+# name
+# Alice   600  500
+# Bob     NaN  700
+
+df.pivot_table(
+    index="name",
+    columns="month",
+    values="sales",
+    aggfunc="mean",
+    fill_value=0
+)
+
+# melt — wide to long (opposite of pivot)
+long = wide.melt(id_vars="name", var_name="month", value_name="sales")
+
+# stack/unstack
+stacked   = df.stack()
+unstacked = stacked.unstack()</pre></div>`;
+
+HTML['timeseries'] = `
+<div class="sec-title"><span class="sec-num">P11</span> Time Series <span class="sec-icon">⏱</span></div>
+<hr class="green">
+<div class="code-wrap"><div class="code-label">Working with Dates and Time</div>
+<pre class="code">df["date"] = pd.to_datetime(df["date"])
+df["date"] = pd.to_datetime(df["date"], format="%d-%m-%Y")
+
+df["year"]    = df["date"].dt.year
+df["month"]   = df["date"].dt.month
+df["day"]     = df["date"].dt.day
+df["weekday"] = df["date"].dt.day_name()
+
+df.set_index("date", inplace=True)
+df.resample("M")["sales"].sum()    # monthly totals
+df.resample("Q")["sales"].mean()   # quarterly averages
+df.resample("Y")["sales"].sum()    # yearly totals
+
+df["prev_sales"] = df["sales"].shift(1)    # previous period
+df["next_sales"] = df["sales"].shift(-1)
+df["change"] = df["sales"] - df["sales"].shift(1)
+
+df["7d_avg"]  = df["sales"].rolling(7).mean()
+df["30d_sum"] = df["sales"].rolling(30).sum()
+
+df["cum_max"] = df["sales"].expanding().max()</pre></div>`;
+
+HTML['apply'] = `
+<div class="sec-title"><span class="sec-num">P12</span> Apply Functions — VERY IMPORTANT <span class="sec-icon">🧩</span></div>
+<hr class="green">
+<p><code class="inline">apply()</code> is your escape hatch when built-in functions aren't enough.</p>
+<div class="code-wrap"><div class="code-label">apply, map, applymap</div>
+<pre class="code">df["salary"].apply(lambda x: x * 1.1)
+df["name"].apply(len)
+
+def grade(score):
+    if score >= 90: return "A"
+    if score >= 80: return "B"
+    if score >= 70: return "C"
+    return "F"
+
+df["grade"] = df["score"].apply(grade)
+
+# On rows (axis=1) — access multiple columns
+df["bonus"] = df.apply(
+    lambda row: row["salary"] * 0.2
+                if row["dept"] == "Sales"
+                else row["salary"] * 0.1,
+    axis=1
+)
+
+df["status"].map({"A": "Active", "I": "Inactive"})
+df["salary"].map(lambda x: f"Rs.{x:,.0f}")</pre></div>
+<div class="note">💡 <strong>Performance tip:</strong> Use vectorized operations whenever possible — they're 10–100x faster than <code class="inline">apply()</code>.</div>`;
+
+HTML['string-ops'] = `
+<div class="sec-title"><span class="sec-num">P13</span> String Operations <span class="sec-icon">🔢</span></div>
+<hr class="green">
+<p>The <code class="inline">.str</code> accessor gives you all of Python's string methods on a whole column at once, vectorized and fast.</p>
+<div class="code-wrap"><div class="code-label">Pandas String Operations</div>
+<pre class="code">df["name"].str.lower()
+df["name"].str.upper()
+df["name"].str.title()
+
+df[df["email"].str.contains("@gmail")]
+df[df["name"].str.startswith("A")]
+df["city"].str.contains("bad", case=False)
+
+df["phone"].str.replace("-", "")
+
+df[["first", "last"]] = df["full_name"].str.split(" ", expand=True)
+
+df["name_len"] = df["name"].str.len()
+
+df["name"].str.strip()
+
+df["year"] = df["date_str"].str.extract(r'(\d{4})')</pre></div>`;
+
+HTML['index-ops'] = `
+<div class="sec-title"><span class="sec-num">P14</span> Index Operations <span class="sec-icon">🔍</span></div>
+<hr class="green">
+<div class="code-wrap"><div class="code-label">Managing the Index</div>
+<pre class="code">df.set_index("emp_id")
+df.set_index("emp_id", inplace=True)
+
+df.reset_index()                     # old index becomes a column
+df.reset_index(drop=True)            # discard the old index
+
+df.reindex([0, 2, 4, 6])
+df.reindex(columns=["a", "b", "c"])
+
+df.set_index(["year", "month"])      # multi-index
+df.xs(2023, level="year")            # cross-section</pre></div>`;
+
+HTML['sampling'] = `
+<div class="sec-title"><span class="sec-num">P15</span> Sampling <span class="sec-icon">🎲</span></div>
+<hr class="green">
+<div class="code-wrap"><div class="code-label">Random Sampling</div>
+<pre class="code">df.sample(5)                          # 5 random rows
+df.sample(frac=0.2)                   # 20% of rows randomly
+df.sample(5, random_state=42)         # reproducible
+df.sample(5, replace=True)            # with replacement
+
+df.sample(10, weights=df["popularity"])
+
+train = df.sample(frac=0.8, random_state=42)
+test  = df.drop(train.index)</pre></div>`;
+
+HTML['summary'] = `
+<div class="sec-title"><span class="sec-num">★</span> What You Actually Need to Master <span class="sec-icon">🏆</span></div>
+<hr class="green">
+<p>There are 100+ Pandas functions. Here's what gets you through 80% of interviews and real work:</p>
+<h3>🎯 The 7 Functions That Cover 80% of Real Work</h3>
+<div class="card" style="margin-bottom:16px"><ul>
+  <li><strong>read_csv</strong> — Load your data. Learn usecols, nrows, na_values, parse_dates.</li>
+  <li><strong>loc / iloc</strong> — Select and filter rows and columns. The backbone of all data selection.</li>
+  <li><strong>groupby</strong> — Aggregate and summarize by categories. Used in every data analysis.</li>
+  <li><strong>merge</strong> — Combine datasets. Know all four join types (inner, left, right, outer).</li>
+  <li><strong>apply</strong> — Custom transformations when built-in functions aren't enough.</li>
+  <li><strong>fillna / dropna</strong> — Handle missing data. Every real dataset has NaN values.</li>
+  <li><strong>pivot_table</strong> — Summarize data in a grid. Excel users will recognize it immediately.</li>
+</ul></div>
+<div class="cards">
+  <div class="card"><h4>💼 Data Analyst Role</h4><ul>
+    <li>groupby + agg (reporting)</li><li>pivot_table (dashboards)</li>
+    <li>merge (joining sources)</li><li>fillna / dropna (cleaning)</li>
+    <li>value_counts (distributions)</li></ul></div>
+  <div class="card"><h4>🔬 Data Scientist Role</h4><ul>
+    <li>apply + lambda (feature engineering)</li><li>rolling + shift (time series)</li>
+    <li>corr (feature selection)</li><li>sample (train/test split)</li>
+    <li>str accessor (NLP prep)</li></ul></div>
+</div>
+<div class="code-wrap"><div class="code-label">Complete Real-World Analysis Example</div>
+<pre class="code">import pandas as pd
+
+# 1. Load
+df = pd.read_csv("employees.csv", parse_dates=["join_date"])
+
+# 2. Inspect
+print(df.shape)
+print(df.info())
+print(df.isnull().sum())
+
+# 3. Clean
+df.drop_duplicates(subset=["emp_id"], inplace=True)
+df["salary"].fillna(df["salary"].median(), inplace=True)
+df.columns = [c.lower().strip() for c in df.columns]
+
+# 4. Filter
+seniors = df.loc[df["experience"] &gt; 5]
+
+# 5. Create features
+df["tax"]     = df["salary"] * 0.1
+df["net_pay"] = df["salary"] - df["tax"]
+df["grade"]   = df["score"].apply(lambda x: "A" if x>=90 else "B")
+
+# 6. Analyze
+dept_summary = df.groupby("department").agg(
+    headcount  = ("emp_id", "count"),
+    avg_salary = ("salary", "mean"),
+    max_salary = ("salary", "max")
+).sort_values("avg_salary", ascending=False)
+
+# 7. Export
+dept_summary.to_csv("dept_summary.csv", index=False)
+print("Done!")</pre></div>`;
+
+// ── Navigation logic ────────────────────────────────────────────────────────
+let current = 'what-is-python';
+
+function show(id) {
+  current = id;
+  document.getElementById('content').innerHTML = HTML[id] || '<p>Section coming soon.</p>';
+  document.getElementById('bc-label').textContent = LABELS[id];
+
+  // sidebar active
+  document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
+  const links = document.querySelectorAll('#sidebar a');
+  links.forEach(a => {
+    if (a.getAttribute('onclick') === `show('${id}')`) a.classList.add('active');
+  });
+
+  // buttons
+  const idx = SECTIONS.indexOf(id);
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx === SECTIONS.length - 1;
+
+  closeSidebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goPrev() {
+  const idx = SECTIONS.indexOf(current);
+  if (idx > 0) show(SECTIONS[idx - 1]);
+}
+function goNext() {
+  const idx = SECTIONS.indexOf(current);
+  if (idx < SECTIONS.length - 1) show(SECTIONS[idx + 1]);
+}
+
+// Topbar tab clicks
+document.querySelectorAll('.tb-tab').forEach(tab => {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.tb-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Hamburger
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// Init
+show('what-is-python');
+</script>
+</body>
+</html>
